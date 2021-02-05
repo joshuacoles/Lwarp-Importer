@@ -29,3 +29,11 @@ into its own file so that they can be connected in an app such as
 [Obsidian](https://obsidian.md). However you could also use this as a basis
 to transform it into a prettier version of the HTML form, with the addition
 of some CSS and HTML clean up.
+
+## Areas for Improvement
+
+Mainly notes for myself for when I inevitably try to do this all again next
+semester,
+
+1. Lists, both numbered and bulleted.
+2. Block math and the equation environment directly in HTML?
