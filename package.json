@@ -3,5 +3,22 @@
   "version": "1.0.0",
   "main": "index.js",
   "author": "Joshua Coles",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@types/jsdom": "^16.2.5",
+    "@types/parse5": "^5.0.3",
+    "@types/prettier": "^2.1.6",
+    "@types/turndown": "^5.0.0",
+    "@types/xmlserializer": "^0.6.1",
+    "jsdom": "^16.4.0",
+    "mathjax-full": "^3.1.2",
+    "mathjax-node": "^2.1.1",
+    "parse5": "^6.0.1",
+    "prettier": "^2.2.1",
+    "ts-node": "^9.1.1",
+    "turndown": "^7.0.0",
+    "typescript": "^4.1.3",
+    "xmlserializer": "^0.6.1",
+    "xpath": "^0.0.32"
+  }
 }
