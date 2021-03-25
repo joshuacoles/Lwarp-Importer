@@ -37,3 +37,27 @@ semester,
 
 1. Lists, both numbered and bulleted.
 2. Block math and the equation environment directly in HTML?
+
+## Post Processing
+
+```
+1176  sd '######' '###' 7\ The\ Divergence\ Theorem.md
+1177  sd '######' '###' 8.md
+1178  sd '######' '###' 9.md
+1180  sd '\\_' '_' *.md
+1181  sd '\\label ?\{[^\}]+\}' '' *.md
+1182  sd '\$\\seteqnumber.+\$' '' *.md
+1183  sd '######' '###' 9.md
+1184  sd '######' '###' 8\ Stokes’\ Theorem.md
+1185  sd '\$\\seteqnumber.+\$' '' *.md
+1186  sd '\\label ?\{[^\}]+\}' '' *.md
+1187  sd '\\_' '_' *.md
+1189  sd '\\_' '_' *.md
+1190  sd '\\label ?\{[^\}]+\}' '' *.md
+1191  sd '\$\\seteqnumber.+\$' '' *.md
+1192  sd '######' '###' *.md
+1197  sd '^###' '' *.md
+1198  sd '\\_' '_' *.md
+1200  sd '\\label ?\{[^\}]+\}' '' *.md
+1203  sd '\$\\seteqnumber.+\$' '' *.md
+```

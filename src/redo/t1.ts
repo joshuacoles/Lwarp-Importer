@@ -84,15 +84,19 @@ async function convertFile(path: string, i: number): Promise<string[]> {
 
     // Fix math
     formattedHtml = formattedHtml
+      // For some reason we are escaping underscores... stop this please
       .replaceAll("\\_", "_")
       .replace(/\\\(\s*/g, '$')
       .replace(/\s*\\\)/g, '$')
-      .replace(/\\\[/g, "\n$$$$\n")
-      .replace(/\\\]/g, "\n$$$$\n")
-      .replace(/\\begin{equation\*?}/g, "\n$$$$\n")
-      .replace(/\\end{equation\*?}/g, "\n$$$$\n")
-      .replace(/\\begin{align\*?}/g, "\n$$$$\n\\begin{align*}")
-      .replace(/\\end{align\*?}/g, "\\end{align*}\n$$$$\n");
+      .replace(/\\\[/g, "\n$$$$\n\n")
+      .replace(/\\\]/g, "\n\n$$$$\n\n")
+      // Equation blocks we just strip the being/end, they can just be $$ ... $$
+      .replace(/\\begin{equation\*?}/g, "\n\n$$$$\n\n")
+      .replace(/\\end{equation\*?}/g, "\n\n$$$$\n\n")
+      // Everything else, we preserve and wrap in $$'s
+      .replace(/\\begin{([\w]+\*?)}/g, '\n\n$$$$\n\n\\being{$1}\n\n')
+      .replace(/\\end{([\w]+\*?)}/g, '\n\n\\end{$1}\n\n$$$$\n\n');
+    // .replace(/\$\\seteqnumber\{.+\}\{(\d+).?\}\{(\d+)\}\$/mg, '$$$$\n$3\n$$$$\n^$1-$2\n\n');
 
     let md = new turndown().turndown(formattedHtml);
 
@@ -101,10 +105,14 @@ async function convertFile(path: string, i: number): Promise<string[]> {
     md = md.replaceAll(" ", " ");
     md = md.replaceAll(" ", " ");
 
+    //// TODO: Do I want to move this into the HTML stage
+    // md = md.replace(/\$\\seteqnumber\{.+\}\{(.+)\}\{(.+)\}\$\n+[^$]+\$\$(.+)\$\$/gm, '$$$$\n$3\n$$$$\n^$1$2\n\n');
+
     // Format markdown
     md = prettier.format(md, { parser: 'markdown' });
 
     md = md.replace(/(?<!^# )((?:Theorem|Definition|Remark|Proposition|Lemma|Example|Corollary)[\s\n]+\d.\d+)/g, '[[$1]]')
+    md = md.replace(/\((\d+).(\d+)\)/g, '[[^$1]]')
 
     sectionMds.push(md);
   }

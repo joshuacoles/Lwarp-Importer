@@ -2,7 +2,7 @@ import { JSDOM } from "jsdom";
 import * as fs from "fs";
 
 import { select } from "xpath";
-import { html2xhtml, norm } from "./x";
+import { html2xhtml, normaliseHtml } from "../y/job";
 
 
 /*!
@@ -83,7 +83,7 @@ function nextUntil(elem: Element, selector: (element: Element) => boolean, filte
 
       container.prepend(hc);
 
-      fs.writeFileSync(`./extracts/objs-2/${i}/${title}.html`, norm(container).outerHTML);
+      fs.writeFileSync(`./extracts/objs-2/${i}/${title}.html`, normaliseHtml(container).outerHTML);
     }
   }
 })()
