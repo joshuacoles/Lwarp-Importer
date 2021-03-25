@@ -1,7 +1,7 @@
 import { JSDOM } from "jsdom";
 import * as fs from "fs";
 
-import { normaliseHtml, nextUntil, explode } from "../x/job";
+import { normaliseHtml, nextUntil, explode } from "./job";
 
 import turndown from "turndown";
 import prettier, { doc } from "prettier";
