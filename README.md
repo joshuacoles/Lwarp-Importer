@@ -1,15 +1,28 @@
-# Lwarp Importer
+# HTML to Markdown Math Importer
 
 Some scripts to break up and understand
-the HTML output of the lwarp LaTeX utility.
+the HTML output of the various html forms
+of math notes. These include:
+
+- The lwarp LaTeX utility.
+- Gitbook.
+- Tex4ht
  
+The outputted markdown is designed for use in the Obsidian app,
+as a baseline for me to start re-writing the content and cleaning it up.
+
+It is a best effort, it is not pretty nor even necessarily valid or
+correct/faithful to the input (this is especially the case with `tex4ht`
+output). When working with these notes, it is best to keep a copy open
+in a web browser nearby for checking against the actual content itself.
+
 ## Rational
 
 PDFs are a pain to work with programmatically,
 however often lecturers will offer "accessible"
 versions of their notes in HTML form having gone
-through the [`lwarp`](https://ctan.org/pkg/lwarp?lang=en)
-program.
+through the [`lwarp`](https://ctan.org/pkg/lwarp?lang=en) or
+[`tex4t`](https://tug.org/tex4ht/) program.
 
 While this output is not necessarily pretty (or even
 necessarily standards conforming!), it is much easier to
@@ -37,27 +50,3 @@ semester,
 
 1. Lists, both numbered and bulleted.
 2. Block math and the equation environment directly in HTML?
-
-## Post Processing
-
-```
-1176  sd '######' '###' 7\ The\ Divergence\ Theorem.md
-1177  sd '######' '###' 8.md
-1178  sd '######' '###' 9.md
-1180  sd '\\_' '_' *.md
-1181  sd '\\label ?\{[^\}]+\}' '' *.md
-1182  sd '\$\\seteqnumber.+\$' '' *.md
-1183  sd '######' '###' 9.md
-1184  sd '######' '###' 8\ Stokes’\ Theorem.md
-1185  sd '\$\\seteqnumber.+\$' '' *.md
-1186  sd '\\label ?\{[^\}]+\}' '' *.md
-1187  sd '\\_' '_' *.md
-1189  sd '\\_' '_' *.md
-1190  sd '\\label ?\{[^\}]+\}' '' *.md
-1191  sd '\$\\seteqnumber.+\$' '' *.md
-1192  sd '######' '###' *.md
-1197  sd '^###' '' *.md
-1198  sd '\\_' '_' *.md
-1200  sd '\\label ?\{[^\}]+\}' '' *.md
-1203  sd '\$\\seteqnumber.+\$' '' *.md
-```
