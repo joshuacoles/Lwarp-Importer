@@ -58,6 +58,10 @@ async function convertFile(path: string, i: number): Promise<string[]> {
   document.querySelectorAll("a")
     .forEach(el => el.textContent ? el.replaceWith(el.textContent) : el.remove());
 
+  // Explode random `ul`s it puts everywhere
+  document.querySelectorAll("ul[style=\"list-style-type:none\"]")
+    .forEach(ul => ul.replaceWith(...Array.from(ul.children).flatMap(x => Array.from(x.children))))
+
   /////
   // Separate
   /////
@@ -68,12 +72,6 @@ async function convertFile(path: string, i: number): Promise<string[]> {
   const sectionMds: string[] = [];
 
   return sections.map(section => {
-    // Breakup annoying blocks
-    for (let block of section.querySelectorAll(".amsthmbodyclearprint, .amsthmbodydefinition")) {
-      const li = block.querySelector("ul > li");
-      block.replaceWith(...Array.from(li!.children))
-    }
-
     addHeaders(section, document);
 
     let normalisedHtml = normaliseHtml(section);
@@ -105,15 +103,20 @@ async function convertFile(path: string, i: number): Promise<string[]> {
       .replace(/\\begin{equation\*?}/g, "\n\n$$$$\n\n")
       .replace(/\\end{equation\*?}/g, "\n\n$$$$\n\n")
       // Everything else, we preserve and wrap in $$'s
-      .replace(/\\begin{([\w]+\*?)}/g, '\n\n$$$$\n\n\\being{$1}\n\n')
+      .replace(/\\begin{([\w]+\*?)}/g, '\n\n$$$$\n\n\\begin{$1}\n\n')
       .replace(/\\end{([\w]+\*?)}/g, '\n\n\\end{$1}\n\n$$$$\n\n');
 
     let md = new turndown().turndown(formattedHtml);
 
     // Remove trash
-    md = md.replaceAll(".  \n" + " ", '');
-    md = md.replaceAll(" ", " ");
-    md = md.replaceAll(" ", " ");
+    md = md.replaceAll(".  \n" + " ", '')
+      .replaceAll(" ", " ")
+      .replaceAll(" ", " ")
+
+      // Remark doesn't like math blocks which are $$ math $$
+      .replace(/^(\$\$)\s*/gm, '$1\n')
+      .replace(/(\$\$)$/gm, '\n$1')
+      .replace(/(\$\$) /gm, '\n$1\n\n');
 
     //// TODO: Do I want to move this into the HTML stage
     // md = md.replace(/\$\\seteqnumber\{.+\}\{(.+)\}\{(.+)\}\$\n+[^$]+\$\$(.+)\$\$/gm, '$$$$\n$3\n$$$$\n^$1$2\n\n');
@@ -121,13 +124,13 @@ async function convertFile(path: string, i: number): Promise<string[]> {
     // Format markdown
     // md = prettier.format(md, { parser: 'markdown' });
 
-    // Replace seteqnumber with references
-    md = md.replace(/\$\\seteqnumber{\d+}{(.+)}{(.+)}\$\n+\s*\$\$(.+)\$\$/g, (_, idA, idB, math) => {
-      return `\n$$${math}$$\n^eq-${(idA + idB).replaceAll('.', '-')}\n`;
-    });
-
-    // Replace (1.2) references with links
-    md = md.replace(/\((\d+).(\d+)\)/g, (_, a, b) => `[[#^eq-${a}-${b}]]`);
+    // // Replace seteqnumber with references
+    // md = md.replace(/\$\\seteqnumber{\d+}{(.+)}{(.+)}\$\n+\s*\$\$(.+)\$\$/g, (_, idA, idB, math) => {
+    //   return `\n$$${math}$$\n^eq-${(idA + idB).replaceAll('.', '-')}\n`;
+    // });
+    //
+    // // Replace (1.2) references with links
+    // md = md.replace(/\((\d+)\.(\d+)\)/g, (_, a, b) => `[[#^eq-${a}-${b}]]`);
 
     return md;
   });
